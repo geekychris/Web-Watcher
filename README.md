@@ -11,6 +11,8 @@ Instead of dealing with false positives from changing layout metadata, Web Watch
 - **Automated Scheduling:** Track pages every few minutes or hours.
 - **History Logs:** Maintains a running history of previous changes and check times.
 
+![img.png](docs/img.png)
+
 ## System Design
 
 The application is written 100% in Swift and utilizes the Swift Package Manager.
