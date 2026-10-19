@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="Web Watcher logo" width="180">
+</p>
+
 # Web Watcher
 
 Web Watcher is a native, highly efficient macOS Menu Bar application that tracks websites for changes. 
