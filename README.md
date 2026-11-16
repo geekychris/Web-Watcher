@@ -27,7 +27,8 @@ The application is written 100% in Swift and utilizes the Swift Package Manager.
 3. **Authentication via WebKit:** The application initializes a shared `WKProcessPool` and `WKWebsiteDataStore`. When background tasks run, they extract the active cookies from this data store and inject them into `URLSession` requests. This allows seamless tracking of authenticated content.
 4. **Notifications:** Because the application is compiled as a raw executable (rather than an `.app` bundle with an `Info.plist`), it leverages macOS's native `osascript` to trigger AppleScript notifications, bypassing bundle identifier requirements for `UNUserNotificationCenter`.
 5. **Persistence:** State is serialized using Swift `Codable` and saved natively to `~/Library/Application Support/WebWatcher/watcher_data.json`.
-6. **Startup Integration:** Registers itself using `SMAppService.mainApp` to launch automatically when you log into your Mac (requires macOS 13+).
+6. **Startup Integration:** The installed app (`~/Applications/WebWatcher.app`) registers itself once with `SMAppService.mainApp` to launch when you log in (macOS 13+). A bare build (`.build/debug`, Xcode's DerivedData) doesn't register, since each build path would become a login item of its own.
+7. **One instance:** A second copy, of any build, sees the first one's lock (`~/Library/Application Support/WebWatcher/instance.lock`) and quits.
 
 ## How to Build
 
@@ -55,9 +56,10 @@ To launch the app directly from the compiled binary:
 ```
 Once executed, the application will disappear from your Dock and appear as an "Eye" icon in your Menu Bar at the top right of your screen. 
 
-### "Installation"
-Since this is an executable package rather than an `.app` bundle, it does not need to be dragged into your `/Applications` folder. However, it will automatically register itself to launch when you turn on your computer. 
+### Installing
+```bash
+scripts/install.sh
+```
+This builds a release `WebWatcher.app` into `~/Applications`, signs it ad hoc and starts it. The app adds itself to Login Items (System Settings › General › Login Items) the first time it runs. Run the script again to update.
 
-If you want to run it permanently in the background without keeping a terminal open, you can either:
-1. Double click the compiled binary in Finder.
-2. Run it detached from the terminal: `nohup .build/debug/WebWatcher &`
+While developing, `.build/debug/WebWatcher` runs without touching Login Items. Quit the installed copy first, because only one Web Watcher runs at a time.
